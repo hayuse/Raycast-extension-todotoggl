@@ -2,7 +2,6 @@
 
 # dependencies
 /node_modules
-package-lock.json
 
 # Raycast specific files
 raycast-env.d.ts
