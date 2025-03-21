@@ -24,9 +24,6 @@ function UpdateTaskForm({ mutate, task }: { mutate: () => void; task: Task }) {
 
   const { projects: togglProjects } = useProjects();
 
-  // console.log(projects);
-  console.log(selectedProject);
-
   async function handleSubmit() {
     try {
       await updateTodoistTask(task.id, {

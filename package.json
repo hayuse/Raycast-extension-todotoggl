@@ -1,19 +1,20 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "todoisttoggl",
-  "title": "TodoistToggl",
+  "title": "Tracking Todoist task for toggl",
   "type": "module",
   "description": "A personal-use extension to improve the relation between Todoist and Toggl Track",
   "icon": "extension-icon.png",
   "author": "hayuse",
   "categories": [
-    "Applications"
+    "Applications",
+    "Productivity"
   ],
   "license": "MIT",
   "commands": [
     {
       "name": "index",
-      "title": "tt",
+      "title": "Tracking task",
       "description": "Create task, Start & Stop timetrack, Update task, Summary Duration.",
       "mode": "view"
     }
