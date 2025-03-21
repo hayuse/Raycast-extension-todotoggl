@@ -20,7 +20,9 @@ function UpdateTaskForm({ mutate, task }: { mutate: () => void; task: Task }) {
 
   const { tags: togglTags } = useTags();
 
-  const [selectedProject, setSelectedProject] = useState<string | undefined>(projects.find((project) => project.id === task.projectId)?.id);
+  const [selectedProject, setSelectedProject] = useState<string | undefined>(
+    projects.find((project) => project.id === task.projectId)?.id,
+  );
 
   const { projects: togglProjects } = useProjects();
 

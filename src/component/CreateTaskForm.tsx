@@ -73,7 +73,7 @@ function CreateTaskForm({ mutate, refreshTimer }: { mutate: () => void; refreshT
       actions={
         <ActionPanel>
           <Action.SubmitForm title="Create" onSubmit={() => handleSubmit()} />
-          <Action.SubmitForm title="Create & start tracking" onSubmit={() => handleSubmit(true)} />
+          <Action.SubmitForm title="Create Start" onSubmit={() => handleSubmit(true)} />
         </ActionPanel>
       }
     >
