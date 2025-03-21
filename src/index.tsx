@@ -19,7 +19,7 @@ export default function Command() {
   const { runningTimeEntry: currentTimer, revalidateRunningTimeEntry: refreshTimer } = useRunningTimeEntry();
 
   const { data: todoistProjects } = useGetProject();
-  
+
   // @todo there are currentTimer only
   const currentTime = useCurrentTime();
 
@@ -119,7 +119,7 @@ export default function Command() {
                     target={<UpdateTaskForm mutate={mutate} task={task} />}
                   />
                   <Action.SubmitForm
-                    title="Summary time track"
+                    title="Summary Time Track"
                     shortcut={{ modifiers: ["cmd"], key: "arrowRight" }}
                     icon={{
                       source: Icon.Calculator,

@@ -2,7 +2,7 @@ import { Icon } from "@raycast/api";
 
 import { Project } from "@doist/todoist-api-typescript";
 
-import { getColorByKey } from "@doist/todoist-api-typescript"; 
+import { getColorByKey } from "@doist/todoist-api-typescript";
 
 export function getProjectUrl(id: string) {
   return `https://todoist.com/app/project/${id}`;
