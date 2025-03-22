@@ -78,6 +78,7 @@ export async function useCreateTask(param: AddTaskArgs) {
     description: param.description,
     priority: param.priority,
     dueString: param.dueString,
+    projectId: param.projectId,
     labels: param.labels,
   });
   return response;

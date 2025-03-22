@@ -21,7 +21,7 @@ function CreateTaskForm({ mutate, refreshTimer }: { mutate: () => void; refreshT
   const { tags: togglTags } = useTags();
   const { me: togglMe } = useMe();
   const [selectedProject, setSelectedProject] = useCachedState("defaultWorkspace", "");
-
+  console.log(selectedProject);
   async function handleSubmit(trackToggl: boolean = false) {
     try {
       showToast({ style: Toast.Style.Animated, title: "Creating task..." });
