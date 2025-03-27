@@ -15,14 +15,24 @@ export async function sumTaskTimer(task: Task, mutate: () => void) {
   let taskDuration = 0;
   for (const comment of comments.results) {
     if (comment.content.includes("@timerID:")) {
-      const match = comment.content.match(/@timerID:(\d+)/);
-      const timerId = match ? match[1] : null;
-      const timeEntry = await justTimeEntry(Number(timerId));
-      const tmpDuration = timeEntry.duration;
-      if (tmpDuration > 0) taskDuration += tmpDuration;
+      try {
+        const match = comment.content.match(/@timerID:(\d+)/);
+        const timerId = match ? match[1] : null;
+        if (!timerId) continue;
+        const timeEntry = await justTimeEntry(Number(timerId));
+        const tmpDuration = timeEntry?.duration;
+        if (tmpDuration > 0) taskDuration += tmpDuration;
+      } catch (error) {
+        console.error(error);
+        continue;
+      }
     }
   }
-  await todoistApi.updateTask(task.id, { duration: taskDuration, durationUnit: "minute" });
+  if (taskDuration > 0) {
+    await todoistApi.updateTask(task.id, { duration: taskDuration, durationUnit: "minute" });
+  } else {
+    showToast({ style: Toast.Style.Failure, title: "This task has not been tracked yet." });
+  }
   mutate();
   showToast({ style: Toast.Style.Success, title: "Completed" });
 }

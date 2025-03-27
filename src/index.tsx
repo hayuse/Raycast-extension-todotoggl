@@ -1,4 +1,4 @@
-import { List, ActionPanel, Action, Icon, showToast, Toast, Color, Keyboard } from "@raycast/api";
+import { List, ActionPanel, Action, Icon, Color, Keyboard } from "@raycast/api";
 import { Task } from "@doist/todoist-api-typescript";
 import { useGetTasks, useGetProject } from "@/hooks/todoist/useTodoist";
 import { useMe, useProjects, useRunningTimeEntry } from "./hooks/toggl";
@@ -20,7 +20,6 @@ export default function Command() {
 
   const { data: todoistProjects } = useGetProject();
 
-  // @todo there are currentTimer only
   const currentTime = useCurrentTime();
 
   const { projects: togglProjects } = useProjects();
@@ -28,11 +27,7 @@ export default function Command() {
   const { me: meData } = useMe();
 
   const durationTask = async (task: Task) => {
-    if (task.commentCount > 0) {
-      sumTaskTimer(task, mutate);
-    } else {
-      showToast({ style: Toast.Style.Failure, title: "This task has not been tracked yet." });
-    }
+    sumTaskTimer(task, mutate);
   };
 
   const getTaskDuration = (task: Task) => {
@@ -96,18 +91,18 @@ export default function Command() {
               }}
               actions={
                 <ActionPanel>
-                  <Action.SubmitForm
+                  <Action
                     title="Start Toggl"
-                    onSubmit={() => startTogglTimer(task, todoistProjects, meData, togglProjects, refreshTimer)}
+                    onAction={() => startTogglTimer(task, todoistProjects, meData, togglProjects, refreshTimer)}
                     icon={{ source: Icon.Clock }}
                   />
-                  <Action.SubmitForm
+                  <Action
                     title="Todo Completed"
                     icon={{
                       source: Icon.CheckCircle,
                       tintColor: Color.Green,
                     }}
-                    onSubmit={() => todoCompleted(task, mutate)}
+                    onAction={() => todoCompleted(task, mutate)}
                   />
                   <Action.Push
                     title="Edit Task"
@@ -118,14 +113,14 @@ export default function Command() {
                     }}
                     target={<UpdateTaskForm mutate={mutate} task={task} />}
                   />
-                  <Action.SubmitForm
+                  <Action
                     title="Summary Time Track"
                     shortcut={{ modifiers: ["cmd"], key: "arrowRight" }}
                     icon={{
                       source: Icon.Calculator,
                       tintColor: Color.Orange,
                     }}
-                    onSubmit={() => durationTask(task)}
+                    onAction={() => durationTask(task)}
                   />
                 </ActionPanel>
               }

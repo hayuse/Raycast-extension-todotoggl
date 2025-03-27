@@ -10,7 +10,7 @@ function UpdateTaskForm({ mutate, task }: { mutate: () => void; task: Task }) {
   const [taskContent, setTaskContent] = useState(task.description);
   const [priority, setPriority] = useState(task.priority.toString());
   const [dueDate] = useState<string | undefined>(undefined);
-  const navigaton = useNavigation();
+  const navigation = useNavigation();
 
   const { data: projects } = useGetProject();
 
@@ -37,9 +37,9 @@ function UpdateTaskForm({ mutate, task }: { mutate: () => void; task: Task }) {
       });
       showToast({ style: Toast.Style.Success, title: "Update task" });
       mutate();
-      navigaton.pop();
+      navigation.pop();
     } catch (error) {
-      showToast({ style: Toast.Style.Failure, title: "Faild to update task" });
+      showToast({ style: Toast.Style.Failure, title: "Failed to update task" });
     }
   }
   return (
@@ -52,10 +52,10 @@ function UpdateTaskForm({ mutate, task }: { mutate: () => void; task: Task }) {
     >
       <Form.Dropdown
         id="project"
-        title="プロジェクト"
+        title="Project"
         value={selectedProject}
         onChange={setSelectedProject}
-        info={"Can`t update project."}
+        info={"Can't update project."}
       >
         <Form.Dropdown.Item
           key={selectedProject ?? ""}
