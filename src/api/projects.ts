@@ -1,20 +1,20 @@
 import { get, post, put, remove } from "@/api/togglClient";
-import type { ToggleItem } from "@/api/types";
+import type { TogglItem } from "@/api/types";
 
-export async function getMyProjects(): Promise<togglProject[]> {
-  return get<togglProject[]>("/me/projects?include_archived=true");
+export async function getMyProjects(): Promise<TogglProject[]> {
+  return get<TogglProject[]>("/me/projects?include_archived=true");
 }
 
 export function createProject(workspaceId: number, options: ProjectOptions) {
-  return post<togglProject>(`/workspaces/${workspaceId}/projects`, options);
+  return post<TogglProject>(`/workspaces/${workspaceId}/projects`, options);
 }
 
 export function updateProject(workspaceId: number, projectId: number, options: Partial<ProjectOptions>) {
-  return put<togglProject>(`/workspaces/${workspaceId}/projects/${projectId}`, options);
+  return put<TogglProject>(`/workspaces/${workspaceId}/projects/${projectId}`, options);
 }
 
 export function deleteProject(workspaceId: number, projectId: number, deletionMode: "delete" | "unassign") {
-  return remove(`/workspaces/${workspaceId}/projects/${projectId}?teDeletionMode=${deletionMode}`);
+  return remove(`/workspaces/${workspaceId}/projects/${projectId}?DeletionMode=${deletionMode}`);
 }
 
 export interface ProjectOptions {
@@ -62,7 +62,7 @@ export interface ProjectOptions {
 }
 
 /** @see {@link https://developers.track.toggl.com/docs/api/projects#response-8 Toggl Api} */
-export interface togglProject extends ToggleItem {
+export interface TogglProject extends TogglItem {
   active: boolean;
   actual_hours: number | null;
   actual_seconds: number | null;

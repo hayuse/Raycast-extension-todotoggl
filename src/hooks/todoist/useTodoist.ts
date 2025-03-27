@@ -17,7 +17,7 @@ export function useGetProject() {
     },
     [],
     {
-      initialData: null,
+      initialData: [],
     },
   );
   return { isLoading, data };
@@ -36,7 +36,7 @@ export function useGetTasks() {
     },
     [],
     {
-      initialData: null,
+      initialData: [],
     },
   );
   return { isLoading, data, mutate };
@@ -55,7 +55,7 @@ export function useGetLabels() {
     },
     [],
     {
-      initialData: null,
+      initialData: [],
     },
   );
   return { isLoading, data, mutate };
@@ -77,17 +77,18 @@ export async function useCreateTask(param: AddTaskArgs) {
     content: param.content,
     description: param.description,
     priority: param.priority,
-    dueString: param.dueString,
     projectId: param.projectId,
+    dueString: param.dueString,
     labels: param.labels,
   });
   return response;
 }
 
 export async function useAddTimerId(param: AddCommentArgs) {
+  if (param.taskId === undefined) return;
   const response = await api.addComment({
     content: `@timerID:${param.content}`,
-    taskId: param.taskId || "",
+    taskId: param.taskId,
   });
   return response;
 }

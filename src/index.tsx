@@ -1,4 +1,4 @@
-import { List, ActionPanel, Action, Icon, showToast, Toast, Color, Keyboard } from "@raycast/api";
+import { List, ActionPanel, Action, Icon, Color, Keyboard } from "@raycast/api";
 import { Task } from "@doist/todoist-api-typescript";
 import { useGetTasks, useGetProject } from "@/hooks/todoist/useTodoist";
 import { useMe, useProjects, useRunningTimeEntry } from "./hooks/toggl";
@@ -14,13 +14,12 @@ import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 
 export default function Command() {
-  const { isLoading, data: tasks, mutate } = useGetTasks();
+  const { isLoading, data: tasks = [], mutate } = useGetTasks();
 
   const { runningTimeEntry: currentTimer, revalidateRunningTimeEntry: refreshTimer } = useRunningTimeEntry();
 
-  const { data: todoistProjects } = useGetProject();
+  const { data: todoistProjects = [] } = useGetProject();
 
-  // @todo there are currentTimer only
   const currentTime = useCurrentTime();
 
   const { projects: togglProjects } = useProjects();
@@ -28,11 +27,7 @@ export default function Command() {
   const { me: meData } = useMe();
 
   const durationTask = async (task: Task) => {
-    if (task.commentCount > 0) {
-      sumTaskTimer(task, mutate);
-    } else {
-      showToast({ style: Toast.Style.Failure, title: "This task has not been tracked yet." });
-    }
+    sumTaskTimer(task, mutate);
   };
 
   const getTaskDuration = (task: Task) => {
@@ -81,57 +76,59 @@ export default function Command() {
           }
         />
       </List.Section>
-      <List.Section title="Tasks">
-        {tasks
-          ?.sort((a: Task, b: Task) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-          .map((task) => (
-            <List.Item
-              key={task.id}
-              title={task.content}
-              subtitle={todoistProjects.find((project) => project.id === task.projectId)?.name}
-              accessories={getTaskDuration(task)}
-              icon={{
-                source: Icon.Circle,
-                tintColor: todoistProjects?.find((project) => project.id === task.projectId)?.color,
-              }}
-              actions={
-                <ActionPanel>
-                  <Action.SubmitForm
-                    title="Start Toggl"
-                    onSubmit={() => startTogglTimer(task, todoistProjects, meData, togglProjects, refreshTimer)}
-                    icon={{ source: Icon.Clock }}
-                  />
-                  <Action.SubmitForm
-                    title="Todo Completed"
-                    icon={{
-                      source: Icon.CheckCircle,
-                      tintColor: Color.Green,
-                    }}
-                    onSubmit={() => todoCompleted(task, mutate)}
-                  />
-                  <Action.Push
-                    title="Edit Task"
-                    shortcut={Keyboard.Shortcut.Common.Edit}
-                    icon={{
-                      source: Icon.Pencil,
-                      tintColor: Color.PrimaryText,
-                    }}
-                    target={<UpdateTaskForm mutate={mutate} task={task} />}
-                  />
-                  <Action.SubmitForm
-                    title="Summary Time Track"
-                    shortcut={{ modifiers: ["cmd"], key: "arrowRight" }}
-                    icon={{
-                      source: Icon.Calculator,
-                      tintColor: Color.Orange,
-                    }}
-                    onSubmit={() => durationTask(task)}
-                  />
-                </ActionPanel>
-              }
-            />
-          ))}
-      </List.Section>
+      {tasks && tasks.length > 0 && (
+        <List.Section title="Tasks">
+          {tasks
+            ?.sort((a: Task, b: Task) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            .map((task) => (
+              <List.Item
+                key={task.id}
+                title={task.content}
+                subtitle={todoistProjects.find((project) => project.id === task.projectId)?.name}
+                accessories={getTaskDuration(task)}
+                icon={{
+                  source: Icon.Circle,
+                  tintColor: todoistProjects?.find((project) => project.id === task.projectId)?.color,
+                }}
+                actions={
+                  <ActionPanel>
+                    <Action
+                      title="Start Toggl"
+                      onAction={() => startTogglTimer(task, todoistProjects, meData, togglProjects, refreshTimer)}
+                      icon={{ source: Icon.Clock }}
+                    />
+                    <Action
+                      title="Todo Completed"
+                      icon={{
+                        source: Icon.CheckCircle,
+                        tintColor: Color.Green,
+                      }}
+                      onAction={() => todoCompleted(task, mutate)}
+                    />
+                    <Action.Push
+                      title="Edit Task"
+                      shortcut={Keyboard.Shortcut.Common.Edit}
+                      icon={{
+                        source: Icon.Pencil,
+                        tintColor: Color.PrimaryText,
+                      }}
+                      target={<UpdateTaskForm mutate={mutate} task={task} />}
+                    />
+                    <Action
+                      title="Summary Time Track"
+                      shortcut={{ modifiers: ["cmd"], key: "arrowRight" }}
+                      icon={{
+                        source: Icon.Calculator,
+                        tintColor: Color.Orange,
+                      }}
+                      onAction={() => durationTask(task)}
+                    />
+                  </ActionPanel>
+                }
+              />
+            ))}
+        </List.Section>
+      )}
     </List>
   );
 }

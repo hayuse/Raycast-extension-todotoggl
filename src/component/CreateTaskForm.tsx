@@ -12,7 +12,7 @@ function CreateTaskForm({ mutate, refreshTimer }: { mutate: () => void; refreshT
   const [taskContent, setTaskContent] = useState("");
   const [priority, setPriority] = useState("1");
   const [dueDate] = useState<string | undefined>(undefined);
-  const navigaton = useNavigation();
+  const navigation = useNavigation();
 
   const { data: projects, isLoading: isLoadingProjects } = useGetProject();
   const { data: labels } = useGetLabels();
@@ -21,7 +21,7 @@ function CreateTaskForm({ mutate, refreshTimer }: { mutate: () => void; refreshT
   const { tags: togglTags } = useTags();
   const { me: togglMe } = useMe();
   const [selectedProject, setSelectedProject] = useCachedState("defaultWorkspace", "");
-  console.log(selectedProject);
+
   async function handleSubmit(trackToggl: boolean = false) {
     try {
       showToast({ style: Toast.Style.Animated, title: "Creating task..." });
@@ -36,9 +36,10 @@ function CreateTaskForm({ mutate, refreshTimer }: { mutate: () => void; refreshT
       if (trackToggl) {
         showToast({ style: Toast.Style.Animated, title: "Starting track..." });
         const currentTodoistProject = projects?.find((project) => project.id === selectedProject);
-        const togglProjectId = currentTodoistProject?.name.indexOf("@")
-          ? currentTodoistProject?.name.slice(currentTodoistProject?.name.indexOf("@") + 1)
-          : null;
+        const togglProjectId =
+          currentTodoistProject?.name.indexOf("@") !== -1
+            ? currentTodoistProject?.name.slice(currentTodoistProject?.name.indexOf("@") + 1)
+            : null;
         const currentTogglProject = togglProjects.find((project) => project.id === Number(togglProjectId));
 
         const now = new Date();
@@ -58,12 +59,12 @@ function CreateTaskForm({ mutate, refreshTimer }: { mutate: () => void; refreshT
           showToast({ style: Toast.Style.Success, title: `${taskTitle} is tracking in Toggl` });
           refreshTimer();
         } catch (error) {
-          showToast({ style: Toast.Style.Failure, title: "Faild to track in Toggl" });
+          showToast({ style: Toast.Style.Failure, title: "Failed to track in Toggl" });
         }
       }
       showToast({ style: Toast.Style.Success, title: "Create task" });
       mutate();
-      navigaton.pop();
+      navigation.pop();
     } catch (error) {
       showToast({ style: Toast.Style.Failure, title: "Failed to create task" });
     }

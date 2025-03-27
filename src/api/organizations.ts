@@ -1,12 +1,12 @@
 import { get } from "@/api/togglClient";
-import type { ToggleItem } from "@/api/types";
+import type { TogglItem } from "@/api/types";
 
 export function getMyOrganizations() {
   return get<Organization[]>("/me/organizations");
 }
 
 /** @see {@link https://developers.track.toggl.com/docs/api/organizations#response-1 Toggl Api} */
-export interface Organization extends ToggleItem {
+export interface Organization extends TogglItem {
   /** Whether the requester is an admin of the organization */
   admin: boolean;
   created_at: string;
@@ -17,7 +17,7 @@ export interface Organization extends ToggleItem {
   /** Maximum number of workspaces allowed for the organization */
   max_workspaces: number;
   name: string;
-  /** Whether the requester is a the owner of the organization */
+  /** Whether the requester is the owner of the organization */
   owner: boolean;
   payment_methods?: string;
   pricing_plan_id: number;

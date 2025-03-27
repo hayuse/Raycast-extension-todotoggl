@@ -1,15 +1,13 @@
 import { showToast, Toast } from "@raycast/api";
-import { createTimeEntry, stopTimeEntry, Me, togglProject } from "@/api";
+import { createTimeEntry, stopTimeEntry, Me, TogglProject } from "@/api";
 import { Task, Project } from "@doist/todoist-api-typescript";
-import { TodoistApi } from "@doist/todoist-api-typescript";
 import { todoistApiToken } from "@/helpers/preferences";
 
-const todoistApi = new TodoistApi(todoistApiToken);
 export async function startTogglTimer(
   task: Task,
   todoistProjects: Project[] | undefined,
   togglMe: Me,
-  togglProjects: togglProject[],
+  togglProjects: TogglProject[],
   refreshTimer: () => void,
 ) {
   const currentTodoistProject = todoistProjects?.find((project) => project.id === task.projectId);
@@ -31,10 +29,18 @@ export async function startTogglTimer(
   };
   try {
     const timeEntryData = await createTimeEntry(togglTimerData);
-    await todoistApi.addComment({ taskId: task.id, content: `@timerID:${timeEntryData.id}` });
+    if (!task.id) {
+      throw new Error("Task is missing an ID");
+    }
+    await addTodoistComment({
+      taskId: String(task.id),
+      content: `@timerID:${timeEntryData.id}`,
+      token: todoistApiToken,
+    });
     refreshTimer();
     showToast({ style: Toast.Style.Success, title: `${task.content} is tracking in Toggl` });
   } catch (error) {
+    console.log(error);
     refreshTimer();
     showToast({ style: Toast.Style.Failure, title: "Faild to track in Toggl" });
   }
@@ -54,4 +60,33 @@ export async function stopTogglTimer(
   } catch (error) {
     showToast({ style: Toast.Style.Failure, title: "Failed to stop tracking in Toggl" });
   }
+}
+
+export async function addTodoistComment({
+  taskId,
+  content,
+  token,
+}: {
+  taskId: string;
+  content: string;
+  token: string;
+}) {
+  const response = await fetch(`https://api.todoist.com/rest/v2/comments`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      task_id: taskId,
+      content: content,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to add comment: ${response.status} ${errorText}`);
+  }
+
+  return await response.json();
 }
