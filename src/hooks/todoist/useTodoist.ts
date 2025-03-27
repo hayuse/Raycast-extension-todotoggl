@@ -85,9 +85,10 @@ export async function useCreateTask(param: AddTaskArgs) {
 }
 
 export async function useAddTimerId(param: AddCommentArgs) {
+  if (param.taskId === undefined) return;
   const response = await api.addComment({
     content: `@timerID:${param.content}`,
-    taskId: param.taskId || "",
+    taskId: param.taskId,
   });
   return response;
 }
