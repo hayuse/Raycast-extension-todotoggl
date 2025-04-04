@@ -12,7 +12,7 @@ export async function sumTaskTimer(task: Task, mutate: () => void) {
   showToast({ style: Toast.Style.Animated, title: "Calculating time from the task comments." });
   const taskId = task.id;
   if (taskId === undefined) return;
-  const comments = await getTodoistComments({taskId, token: todoistApiToken});
+  const comments = await getTodoistComments({ taskId, token: todoistApiToken });
   let taskDuration = 0;
   if (comments === undefined) return;
   for (const comment of comments) {
@@ -39,17 +39,11 @@ export async function sumTaskTimer(task: Task, mutate: () => void) {
   showToast({ style: Toast.Style.Success, title: "Completed" });
 }
 
-export async function getTodoistComments({
-  taskId,
-  token,
-}: {
-  taskId: string;
-  token: string;
-}) {
+export async function getTodoistComments({ taskId, token }: { taskId: string; token: string }) {
   const response = await fetch(`https://api.todoist.com/rest/v2/comments?task_id=${taskId}`, {
     method: "GET",
     headers: {
-      "Authorization": `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
   });
 
