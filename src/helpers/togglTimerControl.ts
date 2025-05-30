@@ -2,6 +2,7 @@ import { showToast, Toast } from "@raycast/api";
 import { createTimeEntry, stopTimeEntry, Me, TogglProject } from "@/api";
 import { Task, Project } from "@doist/todoist-api-typescript";
 import { todoistApiToken } from "@/helpers/preferences";
+import { updateTodoistTask } from "@/hooks/todoist/useTodoist"; 
 
 export async function startTogglTimer(
   task: Task,
@@ -9,6 +10,7 @@ export async function startTogglTimer(
   togglMe: Me,
   togglProjects: TogglProject[],
   refreshTimer: () => void,
+  mutate: () => void,
 ) {
   const currentTodoistProject = todoistProjects?.find((project) => project.id === task.projectId);
   const togglProjectId = currentTodoistProject?.name.indexOf("@")
@@ -32,16 +34,21 @@ export async function startTogglTimer(
     if (!task.id) {
       throw new Error("Task is missing an ID");
     }
+    refreshTimer();
+    await updateTodoistTask(task.id, {
+      dueDatetime: now.toISOString(),
+    })
+    mutate();
     await addTodoistComment({
       taskId: String(task.id),
       content: `@timerID:${timeEntryData.id}`,
       token: todoistApiToken,
     });
-    refreshTimer();
     showToast({ style: Toast.Style.Success, title: `${task.content} is tracking in Toggl` });
   } catch (error) {
     console.log(error);
     refreshTimer();
+    mutate();
     showToast({ style: Toast.Style.Failure, title: "Faild to track in Toggl" });
   }
 }
