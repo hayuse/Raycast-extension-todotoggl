@@ -2,7 +2,7 @@ import { showToast, Toast } from "@raycast/api";
 import { createTimeEntry, stopTimeEntry, Me, TogglProject } from "@/api";
 import { Task, Project } from "@doist/todoist-api-typescript";
 import { todoistApiToken } from "@/helpers/preferences";
-import { updateTodoistTask } from "@/hooks/todoist/useTodoist"; 
+import { updateTodoistTask } from "@/hooks/todoist/useTodoist";
 
 export async function startTogglTimer(
   task: Task,
@@ -37,7 +37,7 @@ export async function startTogglTimer(
     refreshTimer();
     await updateTodoistTask(task.id, {
       dueDatetime: now.toISOString(),
-    })
+    });
     mutate();
     await addTodoistComment({
       taskId: String(task.id),

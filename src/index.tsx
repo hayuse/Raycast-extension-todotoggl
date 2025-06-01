@@ -79,7 +79,11 @@ export default function Command() {
       {tasks && tasks.length > 0 && (
         <List.Section title="Tasks">
           {tasks
-            ?.sort((a: Task, b: Task) => (b.due?.datetime ? new Date(b.due?.datetime).getTime() : 0) - (a.due?.datetime ? new Date(a.due?.datetime).getTime() : 0))
+            ?.sort(
+              (a: Task, b: Task) =>
+                (b.due?.datetime ? new Date(b.due?.datetime).getTime() : 0) -
+                (a.due?.datetime ? new Date(a.due?.datetime).getTime() : 0),
+            )
             .map((task) => (
               <List.Item
                 key={task.id}
@@ -94,7 +98,9 @@ export default function Command() {
                   <ActionPanel>
                     <Action
                       title="Start Toggl"
-                      onAction={() => startTogglTimer(task, todoistProjects, meData, togglProjects, refreshTimer, mutate)}
+                      onAction={() =>
+                        startTogglTimer(task, todoistProjects, meData, togglProjects, refreshTimer, mutate)
+                      }
                       icon={{ source: Icon.Clock }}
                     />
                     <Action

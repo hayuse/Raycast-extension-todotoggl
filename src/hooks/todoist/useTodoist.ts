@@ -63,14 +63,15 @@ export function useGetLabels() {
 
 export async function updateTodoistTask(taskId: string, param: UpdateTaskArgs) {
   const cleanArgs = Object.fromEntries(
-  Object.entries({
-    content: param.content,
-    description: param.description,
-    priority: param.priority,
-    dueString: param.dueString,
-    labels: param.labels,
-    dueDatetime: param.dueDatetime,
-  }).filter(([, v]) => v !== undefined)) as UpdateTaskArgs;
+    Object.entries({
+      content: param.content,
+      description: param.description,
+      priority: param.priority,
+      dueString: param.dueString,
+      labels: param.labels,
+      dueDatetime: param.dueDatetime,
+    }).filter(([, v]) => v !== undefined),
+  ) as UpdateTaskArgs;
 
   const response = await api.updateTask(taskId, cleanArgs);
   return response;
