@@ -81,8 +81,8 @@ export default function Command() {
           {tasks
             ?.sort(
               (a: Task, b: Task) =>
-                (b.due?.datetime ? new Date(b.due?.datetime).getTime() : 0) -
-                (a.due?.datetime ? new Date(a.due?.datetime).getTime() : 0),
+                (b.due?.datetime ? new Date(b.due?.datetime).getTime() : new Date(b.createdAt).getTime()) -
+                (a.due?.datetime ? new Date(a.due?.datetime).getTime() : new Date(a.createdAt).getTime()),
             )
             .map((task) => (
               <List.Item
