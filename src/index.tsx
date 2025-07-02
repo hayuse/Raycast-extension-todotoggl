@@ -13,6 +13,13 @@ import duration from "dayjs/plugin/duration";
 
 dayjs.extend(duration);
 
+// リンクを抽出する関数
+const extractFirstLink = (content: string): string | null => {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const match = content.match(urlRegex);
+  return match ? match[0] : null;
+};
+
 export default function Command() {
   const { isLoading, data: tasks = [], mutate } = useGetTasks();
 
@@ -120,6 +127,17 @@ export default function Command() {
                       }}
                       target={<UpdateTaskForm mutate={mutate} task={task} />}
                     />
+                    {extractFirstLink(task.description) && (
+                      <Action.OpenInBrowser
+                        title="Open Link"
+                        shortcut={{ modifiers: ["cmd"], key: "arrowLeft" }}
+                        icon={{
+                          source: Icon.Link,
+                          tintColor: Color.Blue,
+                        }}
+                        url={extractFirstLink(task.description)!}
+                      />
+                    )}
                     <Action
                       title="Summary Time Track"
                       shortcut={{ modifiers: ["cmd"], key: "arrowRight" }}
