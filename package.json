@@ -21,7 +21,7 @@
     }
   ],
   "dependencies": {
-    "@doist/todoist-api-typescript": "^4.0.0-alpha.3",
+    "@doist/todoist-api-typescript": "^4.0.4",
     "@electron/get": "^4.0.0",
     "@raycast/api": "^1.94.0",
     "@raycast/utils": "^1.19.1",
