@@ -12,7 +12,7 @@ export async function sumTaskTimer(task: Task, mutate: () => void) {
   showToast({ style: Toast.Style.Animated, title: "Calculating time from the task comments." });
   const taskId = task.id;
   if (taskId === undefined) return;
-  const comments = await todoistApi.getComments({taskId});
+  const comments = await todoistApi.getComments({ taskId });
   let taskDuration = 0;
   if (comments === undefined) return;
   for (const comment of comments.results) {
