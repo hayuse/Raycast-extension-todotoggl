@@ -42,7 +42,7 @@ export async function startTogglTimer(
       dueDatetime: now.toISOString(),
     });
     mutate();
-    await todoistApi.addComment({taskId: task.id, content: `@timerID:${timeEntryData.id}`});
+    await todoistApi.addComment({ taskId: task.id, content: `@timerID:${timeEntryData.id}` });
     showToast({ style: Toast.Style.Success, title: `${task.content} is tracking in Toggl` });
   } catch (error) {
     console.log(error);
